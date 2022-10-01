@@ -2,6 +2,10 @@ local vim = vim
 
 local M = {}
 
+local custom = {
+  comment = '#959aa0',
+}
+
 M.classic = {
   name = 'monokai',
   base0 = '#222426',
@@ -54,6 +58,39 @@ M.pro = {
   orange = '#FC9867',
   purple = '#AB9DF2',
   red = '#FD6883',
+  diff_add = '#3d5213',
+  diff_remove = '#4a0f23',
+  diff_change = '#27406b',
+  diff_text = '#23324d',
+}
+
+-- The octagon variant is a combination of the pro variant and helix's octagon theme: https://github.com/helix-editor/helix/blob/master/runtime/themes/monokai_pro_octagon.toml
+-- Author : WindSoilder<WindSoilder@outlook.com>
+-- The unofficial Monokai Pro theme, simply migrate from jetbrains monokai pro theme: https://github.com/subtheme-dev/monokai-pro
+-- Credit goes to the original creator: https://monokai.pro
+M.octagon = {
+  name = 'monokai_octagon',
+  base0 = '#161821',
+  base1 = '#1e1f2b',
+  base2 = '#282a3a',
+  base3 = '#3a3d4b',
+  base4 = '#535763',
+  base5 = '#696d77',
+  base6 = '#767b81',
+  base7 = '#b2b9bd',
+  base8 = '#eaf2f1',
+  border = '#A1B5B1',
+  brown = '#504945',
+  white = '#FFF1F3',
+  grey = '#72696A',
+  black = '#000000',
+  pink = '#FF6188',
+  green = '#bad761',
+  aqua = '#9cd1bb',
+  yellow = '#ffd76d',
+  orange = '#ff9b5e',
+  purple = '#c39ac9',
+  red = '#ff657a',
   diff_add = '#3d5213',
   diff_remove = '#4a0f23',
   diff_change = '#27406b',
@@ -132,9 +169,18 @@ local function highlighter(config)
     local fg = color.fg and 'guifg = ' .. color.fg or 'guifg = NONE'
     local bg = color.bg and 'guibg = ' .. color.bg or 'guibg = NONE'
     local sp = color.sp and 'guisp = ' .. color.sp or ''
-  vim.cmd(
-    'highlight ' .. group .. ' ' .. style .. ' ' .. fg .. ' ' .. bg .. ' ' .. sp
-  )
+    vim.cmd(
+      'highlight '
+        .. group
+        .. ' '
+        .. style
+        .. ' '
+        .. fg
+        .. ' '
+        .. bg
+        .. ' '
+        .. sp
+    )
   end
 end
 
@@ -161,7 +207,7 @@ M.load_syntax = function(palette)
     },
     PmenuThumb = {
       fg = palette.purple,
-      bg = palette.green,
+      bg = palette.base5,
     },
     PmenuSbar = {
       bg = palette.base3,
@@ -222,7 +268,7 @@ M.load_syntax = function(palette)
       fg = palette.brown,
     },
     LineNr = {
-      fg = palette.base5,
+      fg = palette.base7,
       bg = palette.base2,
     },
     SignColumn = {
@@ -379,7 +425,7 @@ M.load_syntax = function(palette)
       fg = palette.orange,
     },
     Comment = {
-      fg = palette.base6,
+      fg = custom.comment,
       style = 'italic',
     },
     Underlined = {
@@ -462,7 +508,7 @@ M.load_plugin_syntax = function(palette)
       fg = palette.green,
     },
     TSComment = {
-      fg = palette.base6,
+      fg = custom.comment,
       style = 'italic',
     },
     TSConstant = {
@@ -720,11 +766,8 @@ M.setup = function(config)
     highlight(group, colors)
   end
   local plugin_syntax = M.load_plugin_syntax(used_palette)
-  plugin_syntax = vim.tbl_deep_extend(
-    'keep',
-    config.custom_hlgroups,
-    plugin_syntax
-  )
+  plugin_syntax =
+    vim.tbl_deep_extend('keep', config.custom_hlgroups, plugin_syntax)
   for group, colors in pairs(plugin_syntax) do
     highlight(group, colors)
   end
